@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Semester 3 grade calculator · VIT Pune E&amp;TC</title>
+<style>
+:root{color-scheme:light;--ink:#16283b;--muted:#526477;--edge:#d6dee3;--teal:#006c67;--paper:#f5f7f8;font-family:Inter,"Segoe UI",Arial,sans-serif;color:var(--ink);background:var(--paper)}
+*{box-sizing:border-box}
+body{margin:0}
+.wrap{max-width:1190px;padding:0 clamp(16px,4vw,54px);margin:auto}
+header{background:#14283b;color:white}
+header .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-block:16px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:650;letter-spacing:.01em}
+.icon{width:22px;height:22px;display:flex;align-items:flex-end;justify-content:center;gap:3px}
+.icon i{width:4px;background:#8ce0ce;border-radius:1px}.icon i:nth-child(1){height:8px}.icon i:nth-child(2){height:14px}.icon i:nth-child(3){height:20px}
+.year{font-size:.875rem;color:#c3d1de}
+main.wrap{padding-block:clamp(26px,4vw,52px)}
+h1{font-size:clamp(2rem,4.2vw,3.4rem);letter-spacing:-.055em;line-height:1.05;margin:0 0 10px}
+p{margin:0;line-height:1.5}.intro{color:var(--muted);margin-bottom:26px}
+.layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,.52fr);gap:20px;align-items:start}
+.panel,details{background:white;border:1px solid var(--edge);border-radius:14px}
+.head{padding:20px 22px 17px;border-bottom:1px solid var(--edge);display:flex;align-items:baseline;justify-content:space-between;gap:8px;flex-wrap:wrap}
+h2{font-size:1.15rem;letter-spacing:-.02em;margin:0}
+.count,.meta,.band,.points{color:var(--muted);font-size:.875rem}
+.row{padding:14px 22px;display:grid;grid-template-columns:minmax(0,1fr) minmax(170px,.9fr);column-gap:24px;align-items:center}
+.row+.row{border-top:1px solid #e5eaec}
+.subject{font-size:1rem;font-weight:650;line-height:1.3;display:block}
+.meta{margin-top:4px}.slidehead{display:flex;align-items:center;justify-content:space-between;gap:6px}
+.grade{font-weight:750;color:#005d54;background:#def4ec;border-radius:5px;padding:2px 7px;min-width:34px;text-align:center;font-size:.94rem}
+.grade.fail{color:#87302c;background:#fbe6e3}
+input[type=range]{display:block;width:100%;height:24px;margin:2px 0 0;accent-color:var(--teal);cursor:pointer}
+:focus-visible{outline:3px solid #137fba;outline-offset:3px}
+.side{display:grid;gap:12px;position:sticky;top:16px}
+.result{background:#153e43;color:white;border-radius:14px;padding:24px;overflow:hidden}
+.result h2{color:#d2ece8;font-size:1rem}
+.value{font-size:clamp(3.5rem,6vw,5.1rem);line-height:1.14;letter-spacing:-.065em;font-weight:650;font-variant-numeric:tabular-nums}
+.outof{font-size:1rem;color:#b9d7d3;margin-left:7px}
+.meter{height:6px;background:#396065;border-radius:6px;margin:14px 0 16px;overflow:hidden}.meter span{display:block;height:100%;background:#87dcc0;width:80%}
+.equation{color:#d2ece8;font-size:.9rem;font-variant-numeric:tabular-nums}
+details{padding:0 16px}summary{cursor:pointer;padding:15px 0;font-weight:650}details[open] summary{margin-bottom:4px}
+.inside{padding:0 0 16px}.inside p{font-size:.9rem;color:var(--muted)}
+.fields{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}
+.fields label{font-size:.875rem;font-weight:600}.fields input{margin-top:5px;width:100%;font:inherit;border:1px solid #95a6b0;border-radius:6px;padding:8px;color:var(--ink)}
+.cumulative{border-top:1px solid var(--edge);padding-top:12px;display:flex;justify-content:space-between;align-items:baseline;font-weight:650}.cumulative output{font-size:1.45rem;color:var(--teal)}
+#hint{margin-top:6px}table{border-collapse:collapse;width:100%;font-size:.9rem;margin:0 0 10px}td,th{text-align:left;padding:5px 0;border-bottom:1px solid #e5eaec}th{color:var(--muted)}td:last-child,th:last-child{text-align:right}
+@media(max-width:780px){.layout{display:flex;flex-direction:column;gap:14px}.side{display:contents}.result{order:-1;width:100%;padding:18px 20px}.panel,details{width:100%}.row{grid-template-columns:minmax(0,1fr) minmax(150px,.8fr)}.value{font-size:3.3rem}.meter{margin:8px 0}.intro{margin-bottom:17px}}
+@media(max-width:490px){.head,.row{padding:14px}.row{grid-template-columns:minmax(0,1fr) minmax(120px,.8fr);gap:12px}.band{font-size:.8rem}.wrap{padding-inline:12px}.subject{font-size:.95rem}.year{font-size:.8rem}}
+</style>
+</head>
+<body>
+<header><div class="wrap"><div class="brand"><span class="icon" aria-hidden="true"><i></i><i></i><i></i></span>VIT Pune · E&amp;TC</div><span class="year">AY 2026–27</span></div></header>
+<main class="wrap">
+<h1>Semester 3 calculator</h1>
+<p class="intro">Choose a grade for each subject to estimate your SGPA. All sliders start at B+.</p>
+<div class="layout">
+<section class="panel" aria-labelledby="course-title"><div class="head"><h2 id="course-title">Subject grades</h2><span class="count" id="count"></span></div><div id="courses"></div></section>
+<aside class="side" aria-label="Results and grading">
+<section class="result"><h2>Semester 3 SGPA</h2><output class="value" id="sgpa" aria-label="Semester 3 SGPA">8.00</output><span class="outof">/ 10</span><div class="meter" aria-hidden="true"><span id="fill"></span></div><p class="equation" id="equation"></p></section>
+<details><summary>Cumulative CGPA</summary><div class="inside"><p>Include your combined results from semesters 1 and 2.</p><div class="fields"><label>Previous CGPA<input id="previous" type="number" min="0" max="10" step="any" inputmode="decimal" placeholder="0–10"></label><label>Previous credits<input id="credits" type="number" min="0" step="any" inputmode="decimal" placeholder="Total credits"></label></div><div class="cumulative">CGPA through Sem 3 <output id="cgpa">—</output></div><p id="hint" role="status"></p></div></details>
+<details><summary>Grade scale</summary><div class="inside"><table><thead><tr><th>Grade</th><th>Marks / 100</th><th>Points / 10</th></tr></thead><tbody id="scale"></tbody></table><p>Provisional cutoffs: D at exactly 40 marks and F below 40. D earns 4 points and F earns 0.</p></div></details>
+</aside></div><noscript>Enable JavaScript in your browser to use the calculator.</noscript></main>
+<script>
+'use strict';
+const courses = [
+  ['ET2301', 'Data Structures', 4],
+  ['ET2302', 'Digital Electronics', 3],
+  ['ET2303', 'Solid State Devices and Circuits', 3],
+  ['ET2304', 'Signals and Systems', 3],
+  ['MM1003', 'IoT for Smart Applications', 3],
+  ['HS2002', 'From Campus to Corporate – 1', 2],
+  ['HS2001', 'Reasoning and Aptitude Development – 3', 1],
+  ['ET2306', 'Engineering Design and Innovation – III', 2],
+  ['ET2305', 'Design Thinking – 3', 1]
+];
+const grades = [
+  ['F', '0–39', 0], ['D', '40', 4], ['C', '41–50', 5], ['C+', '51–60', 6],
+  ['B', '61–70', 7], ['B+', '71–80', 8], ['A', '81–90', 9], ['A+', '91–100', 10]
+];
+const get = id => document.getElementById(id);
+const totalCredits = courses.reduce((sum, course) => sum + course[2], 0);
+get('count').textContent = courses.length + ' subjects · ' + totalCredits + ' credits';
+get('scale').innerHTML = grades.slice().reverse().map(([name, marks, points]) =>
+  `<tr><td>${name}</td><td>${marks}</td><td>${points}</td></tr>`).join('');
+const sliders = courses.map(([code, title, credits]) => {
+  const row = document.createElement('div');
+  row.className = 'row';
+  row.innerHTML = `<div><label class="subject" for="${code}">${title}</label>
+    <div class="meta">${code} · ${credits} ${credits === 1 ? 'credit' : 'credits'}</div></div>
+    <div><div class="slidehead"><span class="grade"></span><span class="band"></span></div>
+    <input id="${code}" type="range" min="0" max="${grades.length - 1}" step="1" value="5"></div>`;
+  get('courses').append(row);
+  return {input: get(code), badge: row.querySelector('.grade'), band: row.querySelector('.band'), credits};
+});
+function recalculate() {
+  let weightedPoints = 0;
+  for (const {input, badge, band, credits} of sliders) {
+    const [name, marks, points] = grades[input.valueAsNumber];
+    weightedPoints += credits * points;
+    badge.textContent = name;
+    badge.classList.toggle('fail', points === 0);
+    band.textContent = marks + ' marks';
+    input.setAttribute('aria-valuetext', `${name}, ${marks} marks, ${points} grade points`);
+  }
+  const semesterGpa = weightedPoints / totalCredits;
+  get('sgpa').textContent = semesterGpa.toFixed(2);
+  get('fill').style.width = (semesterGpa * 10) + '%';
+  get('equation').textContent = `${weightedPoints} weighted points ÷ ${totalCredits} credits`;
+  const previous = get('previous').valueAsNumber;
+  const credits = get('credits').valueAsNumber;
+  const valid = previous >= 0 && previous <= 10 && Number.isFinite(credits) && credits > 0;
+  get('cgpa').textContent = valid
+    ? ((previous * credits + weightedPoints) / (credits + totalCredits)).toFixed(2)
+    : '—';
+  get('hint').textContent = valid ? '' : 'Enter a CGPA from 0 to 10 and a credit total above zero.';
+}
+document.addEventListener('input', recalculate);
+recalculate();
+</script>
+</body></html>
